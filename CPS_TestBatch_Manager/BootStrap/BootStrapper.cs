@@ -32,6 +32,7 @@ namespace CPS_TestBatch_Manager.BootStrap
             builder.RegisterType<CaseIdFileDataService>().As<ICaseIdDataService>();
 
             return builder.Build();
+            //adding a comment
         }
     }
 }
