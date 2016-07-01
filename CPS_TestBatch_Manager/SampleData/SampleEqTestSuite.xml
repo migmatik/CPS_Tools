@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<EqTestSuite>
+  <TestCases>
+    <EqTestCase Id="1" Name="TestCase_01" EqCourierPrefix="SIM_">
+      <Description>description for test batch 1  no namespace</Description>
+      <EQListSimulationInput>
+        <ResponseSettings>
+          <ResponseChannel id="1">RESPONDENT_ELECTRONIC</ResponseChannel>
+          <QuestionnaireId>N1916</QuestionnaireId>
+          <ResponseStatus>SUBMITTED</ResponseStatus>
+        </ResponseSettings>
+        <Responses>
+          <Response CaseId="555555" ResponseId="123456" ResponseFile="\\F7CPA-SVC01\EqResponses\Miguel_Tests\Build_E2\N1\N1_GoesToFEFU.xml" />
+          <Response CaseId="4106218" ResponseId="124106218" ResponseFile="\\F7CPA-SVC01\EqResponses\Miguel_Tests\Build_E2\N1\N1_GoesToFEFU.xml" />
+        </Responses>
+      </EQListSimulationInput>
+    </EqTestCase>
+    <EqTestCase Id="2" Name="TestCase_02" EqCourierPrefix="SIM_2">
+      <Description>description for test batch 2 test</Description>
+      <EQListSimulationInput>
+        <ResponseSettings>
+          <ResponseChannel id="1">RESPONDENT_ELECTRONIC</ResponseChannel>
+          <QuestionnaireId>N1916</QuestionnaireId>
+          <ResponseStatus>SUBMITTED</ResponseStatus>
+        </ResponseSettings>
+        <Responses>
+          <Response ResponseFile="C:\temp\fakeEqResponseFile_01.xml" />
+          <Response ResponseFile="\\F7CPA-SVC01\EqResponses\Miguel_Tests\Build_E2\N1\N1_GoesToFEFU_02.xml" />
+          <Response ResponseFile="\\F7CPA-SVC01\EqResponses\Miguel_Tests\Build_E2\N1\N1_GoesToFEFU_03.xml" />
+          <Response ResponseFile="\\F7CPA-SVC01\EqResponses\Miguel_Tests\Build_E2\N1\N1_GoesToFEFU_04.xml" />
+          <Response ResponseFile="\\F7CPA-SVC01\EqResponses\Miguel_Tests\Build_E2\N1\N1_GoesToFEFU_05.xml" />
+          <Response ResponseFile="\\F7CPA-SVC01\EqResponses\Miguel_Tests\Build_E2\N1\N1_GoesToFEFU_06.xml" />
+        </Responses>
+      </EQListSimulationInput>
+    </EqTestCase>
+  </TestCases>
+</EqTestSuite>
