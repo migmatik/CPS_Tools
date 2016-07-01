@@ -45,3 +45,29 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
+*.baml
+/CPS_TestBatch_Manager/obj/Debug/Views/Dialogs/MessageDialog.g.cs
+/CPS_TestBatch_Manager/obj/Debug/Views/TestCaseEditView.g.i.cs
+/CPS_TestBatch_Manager/obj/Debug/Views/TestCaseEditView.g.cs
+/CPS_TestBatch_Manager/obj/Debug/Views/Dialogs/MessageDialog.g.i.cs
+/CPS_TestBatch_Manager/obj/Debug/TemporaryGeneratedFile_E7A71F73-0F8D-4B9B-B56E-8E70B10BC5D3.cs
+/CPS_TestBatch_Manager/obj/Debug/TemporaryGeneratedFile_5937a670-0e60-4077-877b-f7221da3dda1.cs
+/CPS_TestBatch_Manager/obj/Debug/TemporaryGeneratedFile_036C0B5B-1481-4323-8D20-8F5ADCB23D92.cs
+/CPS_TestBatch_Manager/obj/Debug/MainWindow.g.i.cs
+/CPS_TestBatch_Manager/obj/Debug/MainWindow.g.cs
+/CPS_TestBatch_Manager/obj/Debug/GeneratedInternalTypeHelper.g.i.cs
+/CPS_TestBatch_Manager/obj/Debug/GeneratedInternalTypeHelper.g.cs
+/CPS_TestBatch_Manager/obj/Debug/CPS_TestBatch_Manager_MarkupCompile.lref
+/CPS_TestBatch_Manager/obj/Debug/CPS_TestBatch_Manager_MarkupCompile.i.lref
+/CPS_TestBatch_Manager/obj/Debug/CPS_TestBatch_Manager_Content.g.i.cs
+/CPS_TestBatch_Manager/obj/Debug/CPS_TestBatch_Manager_Content.g.cs
+/CPS_TestBatch_Manager/obj/Debug/CPS_TestBatch_Manager.Properties.Resources.resources
+/CPS_TestBatch_Manager/obj/Debug/CPS_TestBatch_Manager.g.resources
+/CPS_TestBatch_Manager/obj/Debug/CPS_TestBatch_Manager.csproj.FileListAbsolute.txt
+/CPS_TestBatch_Manager/obj/Debug/App.g.i.cs
+/CPS_TestBatch_Manager/obj/Debug/App.g.cs
+/CPS_TestBatch_Manager/bin/Debug/CPS_TestBatch_Manager.vshost.exe.manifest
+/CPS_TestBatch_Manager/bin/Debug/CPS_TestBatch_Manager.vshost.exe.config
+/CPS_TestBatch_Manager/bin/Debug/CPS_TestBatch_Manager.exe.config
+/CPS_TestBatch_Manager/bin/Debug/Prism.xml
+/CPS_TestBatch_Manager/bin/Debug/Autofac.xml
