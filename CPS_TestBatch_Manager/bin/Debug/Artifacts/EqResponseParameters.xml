@@ -1,0 +1,24 @@
+<EqResponseParameters>
+	<Parameters>
+		<Param Name="ResponseChannel">
+			<Options>
+				<Option value="RESPONDENT_ELECTRONIC" id="1" />
+				<Option value="INTERVIEWER_TELEPHONE_FEFU_ELECTRONIC" id="5" />
+			</Options>
+		</Param>
+		<Param Name="QuestionnaireId">
+			<Options>
+				<Option value="C2A916" />
+				<Option value="C2A916FEFU" />
+				<Option value="N1916" />
+				<Option value="Other" />
+			</Options>
+		</Param>
+		<Param Name="ResponseStatus">
+			<Options>
+				<Option value="SAVED" />
+				<Option value="SUBMITTED" />
+			</Options>
+		</Param>		
+	</Parameters>
+</EqResponseParameters>

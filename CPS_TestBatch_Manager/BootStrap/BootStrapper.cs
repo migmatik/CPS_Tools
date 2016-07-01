@@ -33,6 +33,7 @@ namespace CPS_TestBatch_Manager.BootStrap
 
             return builder.Build();
             //adding a comment
+            //adding another comment
         }
     }
 }
