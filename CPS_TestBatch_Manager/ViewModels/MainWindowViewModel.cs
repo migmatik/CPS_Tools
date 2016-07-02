@@ -70,6 +70,7 @@ namespace CPS_TestBatch_Manager.ViewModels
             {
                 _eventAggregator = eventAggregator;
                 _eventAggregator.GetEvent<TestCaseDeletedEvent>().Subscribe(OnTestCaseDeleted);
+                _eventAggregator.GetEvent<TestCaseSavedEvent>().Subscribe(OnTestCaseSaved);
                 _testCaseEditViewModelCreator2 = testCaseEditVmCreator2;
 
                 _testCaseEditViewModelCreator = testCaseEditVmCreator;
@@ -80,6 +81,24 @@ namespace CPS_TestBatch_Manager.ViewModels
 
                 CloseTabCommand = new RelayCommand(p => CloseTab(p));
                 LoadTestSuiteCommand = new RelayCommand(p => LoadTestCaseSuiteFile());
+            }
+        }
+
+        private void OnTestCaseSaved(EqTestCase savedTestCase)
+        {
+            //var testCaseEditVmToSave = TestCaseEditViewModels.SingleOrDefault(vm => vm.TestCase.Id == savedTestCase.Id);
+            var navItemVm = NavigationViewModel.NavigationItems.SingleOrDefault(item => item.Id == savedTestCase.Id);
+
+            
+
+            if (navItemVm != null)
+            {
+                var updatedVm = new NavigationItemViewModel(savedTestCase.Id, savedTestCase.Name);
+
+                NavigationViewModel.NavigationItems.Remove(navItemVm);
+                NavigationViewModel.NavigationItems.Add(updatedVm);
+
+                SelectedNavigationItemViewModel = updatedVm;
             }
         }
 

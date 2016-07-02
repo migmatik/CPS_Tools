@@ -81,6 +81,7 @@
     <Compile Include="DataProvider\OpenFileDialogService.cs" />
     <Compile Include="DataProvider\ResponseParameterOptionsService.cs" />
     <Compile Include="DataAccess\TestCaseFileDataService.cs" />
+    <Compile Include="Events\TestCaseSavedEvent.cs" />
     <Compile Include="Events\TestCaseDeletedEvent.cs" />
     <Compile Include="Models\EqInitInputTemplate.cs" />
     <Compile Include="Models\EqResponseParameters.cs" />
