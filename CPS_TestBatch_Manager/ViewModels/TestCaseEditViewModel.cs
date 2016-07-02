@@ -280,6 +280,7 @@ namespace CPS_TestBatch_Manager.ViewModels
         {            
             _testCaseDataProvider.SaveEqTestCase(TestCase.Model);
             TestCase.AcceptChanges();
+            _eventAggregator.GetEvent<TestCaseSavedEvent>().Publish(TestCase.Model);
         }
 
         public ICommand ResetCommand { get; private set; }
@@ -347,25 +348,9 @@ namespace CPS_TestBatch_Manager.ViewModels
                 ser.Serialize(writer, testCase.EQListSimulationInput, ns);
             }
         }
-
-        //TODO: get the case id from the proper place, such as a file...
+        
         private void GenerateCaseIdAndResponseIdIfNull()
-        {
-            //int i = 1;
-            //foreach (var resp in TestCase.Model.EQListSimulationInput.Responses)
-            //{
-            //    if (string.IsNullOrEmpty(resp.CaseId))
-            //    {
-            //        resp.CaseId = _caseIdDataProvider.GetAvailableCaseId(TestCase.EQListSimulationInput.ResponseSettings.QuestionnaireId);//string.Format("{0}2345", i);
-            //        //i++;
-            //    }
-
-            //    if (string.IsNullOrEmpty(resp.ResponseId))
-            //    {
-            //        resp.ResponseId = string.Concat("11", resp.CaseId);
-            //    }
-            //}
-
+        {            
             foreach (var resp in TestCase.EQListSimulationInput.Responses)
             {
                 if (string.IsNullOrEmpty(resp.CaseId))

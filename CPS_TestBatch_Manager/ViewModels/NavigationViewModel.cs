@@ -2,6 +2,7 @@
 using CPS_TestBatch_Manager.Events;
 using CPS_TestBatch_Manager.Framework;
 using CPS_TestBatch_Manager.Models;
+using CPS_TestBatch_Manager.Wrappers;
 using Prism.Events;
 using System;
 using System.Collections.Generic;
@@ -32,13 +33,28 @@ namespace CPS_TestBatch_Manager.ViewModels
         public NavigationViewModel(IEventAggregator eventAggregator, Func<string, ILookupProvider<EqTestCase>> eqTestCaseLookUpProvider)
         {
             _eventAggregator = eventAggregator;
-            _eventAggregator.GetEvent<TestCaseDeletedEvent>().Subscribe(OnTestCaseDeleteEvent);
+            _eventAggregator.GetEvent<TestCaseDeletedEvent>().Subscribe(OnTestCaseDeletedEvent);
+            //_eventAggregator.GetEvent<TestCaseSavedEvent>().Subscribe(OnTestCaseSavedEvent);
             _eqTestCaseLookUpCreator = eqTestCaseLookUpProvider;
             NavigationItems = new ObservableCollection<NavigationItemViewModel>();
             TestCases = new ObservableCollection<EqTestCase>();            
         }
 
-        private void OnTestCaseDeleteEvent(int testCaseId)
+        //private void OnTestCaseSavedEvent(EqTestCase savedTestCase)
+        //{
+        //    var navItem = NavigationItems.SingleOrDefault(item => item.Id == savedTestCase.Id);
+
+        //    if(navItem != null)
+        //    {
+        //        navItem.DisplayValue = savedTestCase.Name;
+        //    }
+        //    else
+        //    {
+        //        //load testsuite file...
+        //    }
+        //}
+
+        private void OnTestCaseDeletedEvent(int testCaseId)
         {
             var navItemToRemove = NavigationItems.SingleOrDefault(i => i.Id == testCaseId);
 
@@ -50,19 +66,22 @@ namespace CPS_TestBatch_Manager.ViewModels
 
         public void Load(string filename)
         {
-            NavigationItems.Clear();
-
-            var lookupService = _eqTestCaseLookUpCreator(filename);
+            if(NavigationItems != null)
+            {
+                NavigationItems.Clear();
+            }
             
+            var lookupService = _eqTestCaseLookUpCreator(filename);            
+
             foreach (var testCaselookupItem in lookupService.GetLookup())
             {
                 NavigationItems.Add(new NavigationItemViewModel(testCaselookupItem.Id, testCaselookupItem.DisplayValue));
             }
             
-        }
+        }        
     }
 
-    public class NavigationItemViewModel: ViewModelBase
+    public class NavigationItemViewModel : ViewModelBase, IValidatableTrackingObject
     {
         private int _id;
         private string _displayValue;
@@ -98,5 +117,25 @@ namespace CPS_TestBatch_Manager.ViewModels
             return DisplayValue;
         }
 
+
+        public bool IsValid
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        public void RejectChanges()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void AcceptChanges()
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool IsChanged
+        {
+            get { throw new NotImplementedException(); }
+        }
     }
 }
