@@ -41,8 +41,12 @@
         <Label Content="Description" Grid.Row="5" Margin="5"/>
         <TextBox Text="{Binding TestCase.Description, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="5" Grid.RowSpan="6" Grid.Column="1"  Margin="5,5,5,0" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" Height="Auto" MaxHeight="200" VerticalAlignment="Top"/>
 
-        <GroupBox Header="Response Files" Grid.Column="2" Grid.RowSpan="6" HorizontalAlignment="Left" Height="280" FontWeight="Normal" VerticalAlignment="Top" Width="Auto">
+        <GroupBox Header="Response Files" Grid.Column="2" Grid.RowSpan="6" HorizontalAlignment="Left" Height="280" FontWeight="Normal" VerticalAlignment="Top" Width="Auto">            
             <StackPanel Grid.Row="1">
+                <StackPanel Orientation="Horizontal">
+                    <Button Command="{Binding AddResponseCommand}" Style="{StaticResource AddButtonStyle}" HorizontalAlignment="Right"/>
+                    <Button Command="{Binding RemoveResponseCommand}" Style="{StaticResource RemoveButtonStyle}" HorizontalAlignment="Right"/>
+                </StackPanel>
                 <DataGrid Name="ResponseGrid" ItemsSource="{Binding TestCase.EQListSimulationInput.Responses}" SelectedItem="{Binding SelectedResponse,Mode=TwoWay}" AutoGenerateColumns="false"  MaxHeight="200" FontSize="12">                    
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Case Id" Binding="{Binding CaseId,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
@@ -63,7 +67,7 @@
                         
                     </DataGrid.Columns>                    
                 </DataGrid>
-                <Button Content="Add Response File" Command="{Binding AddEqResponseCommand}" Margin="5" Width="120"/>
+                <!--<Button Content="Add Response File" Command="{Binding AddEqResponseCommand}" Margin="5" Width="120"/>-->
             </StackPanel>
         </GroupBox>
 

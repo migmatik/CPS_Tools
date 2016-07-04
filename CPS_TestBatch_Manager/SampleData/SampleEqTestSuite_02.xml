@@ -25,6 +25,7 @@
         </ResponseSettings>
         <Responses>
           <Response CaseId="123459" ResponseId="11123459" ResponseFile="C:\temp\fakeEqResponseFile_01.xml" />
+          <Response ResponseFile="G:\GitHub\CPS_Tools\CPS_TestBatch_Manager\SampleData\fakeEqResponseFile_02.xml" />
         </Responses>
       </EQListSimulationInput>
     </EqTestCase>

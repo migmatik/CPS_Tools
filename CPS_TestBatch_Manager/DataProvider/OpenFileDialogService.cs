@@ -13,7 +13,7 @@ namespace CPS_TestBatch_Manager.DataProvider
         {
             var openFileDlg = new OpenFileDialog();
 
-            openFileDlg.Filter = "Test Batch Files (.xml)|*.xml";
+            openFileDlg.Filter = "XML file|*.xml|All files|*.*";
             openFileDlg.Multiselect = false;
 
             string selected_file = null;

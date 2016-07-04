@@ -37,6 +37,7 @@ namespace CPS_TestBatch_Manager.ViewModels
         private EqTestCaseWrapper _testCase;               
         private IEqTestCaseDataProvider _testCaseDataProvider;
         private ICaseIdDataProvider _caseIdDataProvider;
+        private IIOService _openFileDialogService;
  
         public EqTestCaseWrapper TestCase 
         {
@@ -81,7 +82,8 @@ namespace CPS_TestBatch_Manager.ViewModels
             IXmlSerializerService<EqResponseParameters> responseParamOptionsDataprovider, 
             IEventAggregator eventAggregator, 
             IMessageDialogService messageDialogService,
-            ICaseIdDataProvider caseIdDataProvider)
+            ICaseIdDataProvider caseIdDataProvider,
+            IIOService openFileDialogService)
         {
             if (testCaseDataProviderCreator == null) { throw new ArgumentNullException("testCaseDataProvider"); }
 
@@ -89,10 +91,13 @@ namespace CPS_TestBatch_Manager.ViewModels
             _messageDialogService = messageDialogService;
             _testCaseDataProvider = testCaseDataProviderCreator(filename);
             _caseIdDataProvider = caseIdDataProvider;
+            _openFileDialogService = openFileDialogService;
             ResponseParameterOptions = responseParamOptionsDataprovider.XmlFileToObject();
             TestSuiteFile = filename;
+            AddResponseCommand = new RelayCommand(p => AddResponse(p));
+            RemoveResponseCommand = new RelayCommand(p => RemoveResponse(p));
             InitializeCommands();
-        }        
+        }            
        
         public void Load(int? testCaseId = null)
         {
@@ -295,7 +300,12 @@ namespace CPS_TestBatch_Manager.ViewModels
         private void ResetChanges()
         {
             TestCase.RejectChanges();
-            SelectedResponseChannel = ResponseChannelList.Single(r => r.Id == TestCase.EQListSimulationInput.ResponseSettings.ResponseChannel.Id);
+            var selectedResponseChannel = ResponseChannelList.SingleOrDefault(r => r.Id == TestCase.EQListSimulationInput.ResponseSettings.ResponseChannel.Id);
+            
+            if(selectedResponseChannel != null)
+            {
+                SelectedResponseChannel = selectedResponseChannel;
+            }            
         }
        
         public ICommand DeleteCommand { get; private set; }
@@ -376,6 +386,28 @@ namespace CPS_TestBatch_Manager.ViewModels
         {
             EqInitInputFileCreator.Create(TestCase, outputDir, suffix);
             EqCourierIdCreated = string.Concat(TestCase.EqCourierPrefix, suffix);
-        }        
+        }
+
+        #region Commands
+        public ICommand AddResponseCommand { get; private set; }
+
+        private void AddResponse(object p)
+        {
+            string responseFile = _openFileDialogService.OpenFileDialog();
+
+            if (!string.IsNullOrEmpty(responseFile))
+            {
+                TestCase.EQListSimulationInput.Responses.Add(new ResponseWrapper(new Response { ResponseFile = responseFile }));
+            }                
+        }   
+
+        public ICommand RemoveResponseCommand { get; private set; }
+
+        private void RemoveResponse(object p)
+        {
+            TestCase.EQListSimulationInput.Responses.Remove(SelectedResponse);
+        }
+         
+        #endregion
     }
 }

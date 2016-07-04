@@ -27,7 +27,17 @@ namespace CPS_TestBatch_Manager.ViewModels
         public INavigationViewModel NavigationViewModel { get; private set; }
         public ObservableCollection<ITestCaseEditViewModel> TestCaseEditViewModels { get; private set; }
         public string TestCaseSuiteFile { get; private set; }
-        
+
+        private bool _canAddTestCase = false;
+        public bool CanAddTestCase
+        {
+            get { return _canAddTestCase; }
+            set
+            {
+                _canAddTestCase = value;
+                RaisePropertyChanged();
+            }
+        }
         public ObservableCollection<string> Environments
         {
             get; private set; 
@@ -226,6 +236,7 @@ namespace CPS_TestBatch_Manager.ViewModels
                 TestCaseSuiteFile = testSuiteFile;
                 TestCaseEditViewModels.Clear();
                 NavigationViewModel.Load(testSuiteFile);
+                CanAddTestCase = true;
             }            
         }
 
