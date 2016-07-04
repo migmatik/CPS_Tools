@@ -87,7 +87,6 @@ namespace CPS_TestBatch_Manager.Wrappers
         {
             var added = this.Where(current => _originalCollection.All(orig => orig != current));
             var removed = _originalCollection.Where(orig => this.All(current => current != orig));
-
             var modified = this.Except(added).Except(removed).Where(item => item.IsChanged).ToList();
 
             AttachItemPropertyChangedHandler(added);
