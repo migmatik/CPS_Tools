@@ -31,7 +31,7 @@
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
             <StackPanel Grid.Column="0" Margin="0,0,5,0">
-                <Button Command="{Binding AddTestCaseCommand}" ToolTip="Add Test Case" Style="{StaticResource AddButtonStyle}"/>
+                <Button IsEnabled="{Binding CanAddTestCase}" Command="{Binding AddTestCaseCommand}" ToolTip="Add Test Case" Style="{StaticResource AddButtonStyle}"/>
                 <!--<ListBox Name="TestBatchesListBox" ItemsSource="{Binding NavigationViewModel.TestCases}" SelectedItem="{Binding SelectedTestCase, Mode=TwoWay}" FontSize="14" />-->
                 <ListBox Name="TestBatchesListBox" ItemsSource="{Binding NavigationViewModel.NavigationItems}" SelectedItem="{Binding SelectedNavigationItemViewModel, Mode=TwoWay}" FontSize="14" />
             </StackPanel>
