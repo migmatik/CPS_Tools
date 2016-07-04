@@ -22,13 +22,16 @@
                 <MenuItem x:Name="MenuItemOpenFile" Header="Open..." Command="{Binding LoadTestSuiteCommand, Mode=OneWay}"/>
 				<MenuItem x:Name="MenuItemSaveFile" Header="Save"/>
 			</MenuItem>
-		</Menu>
+            <ComboBox ItemsSource="{Binding Environments}"  Width="100" />
+            
+        </Menu>
         <Grid Grid.Row="1" Margin="1,5,1,0" Grid.RowSpan="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="200"/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <StackPanel Grid.Column="0" Margin="0,0,5,0">                
+            <StackPanel Grid.Column="0" Margin="0,0,5,0">
+                <Button Command="{Binding AddTestCaseCommand}" ToolTip="Add Test Case" Style="{StaticResource AddButtonStyle}"/>
                 <!--<ListBox Name="TestBatchesListBox" ItemsSource="{Binding NavigationViewModel.TestCases}" SelectedItem="{Binding SelectedTestCase, Mode=TwoWay}" FontSize="14" />-->
                 <ListBox Name="TestBatchesListBox" ItemsSource="{Binding NavigationViewModel.NavigationItems}" SelectedItem="{Binding SelectedNavigationItemViewModel, Mode=TwoWay}" FontSize="14" />
             </StackPanel>

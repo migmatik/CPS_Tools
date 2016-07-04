@@ -92,7 +92,7 @@ namespace CPS_TestBatch_Manager.ViewModels
             ResponseParameterOptions = responseParamOptionsDataprovider.XmlFileToObject();
             TestSuiteFile = filename;
             InitializeCommands();
-        }
+        }        
        
         public void Load(int? testCaseId = null)
         {
@@ -120,8 +120,15 @@ namespace CPS_TestBatch_Manager.ViewModels
 
         private EqTestCase GetNewTestCase()
         {
-            throw new NotImplementedException();
-        }
+            return new EqTestCase
+            {               
+                EQListSimulationInput = new EqSimulatedInput
+                {
+                    ResponseSettings = new ResponseSettings { ResponseChannel = new ResponseChannel() },
+                    Responses = new List<Response>()
+                }
+            };
+        }       
 
         private void InitializeCommands()
         {

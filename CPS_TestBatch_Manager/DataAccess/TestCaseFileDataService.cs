@@ -60,7 +60,11 @@ namespace CPS_TestBatch_Manager.DataAccess
 
         private void InsertTestCase(EqTestCase testCase)
         {
-            throw new NotImplementedException();
+            var testCases = ReadFromFile().ToList();
+            var maxTestCaseId = testCases.Max(tc => tc.Id);
+            testCase.Id = maxTestCaseId + 1;
+            testCases.Add(testCase);
+            SaveToFile(testCases);
         }
 
         public void DeleteTestCase(int id)

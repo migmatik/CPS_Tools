@@ -27,6 +27,12 @@ namespace CPS_TestBatch_Manager.ViewModels
         public INavigationViewModel NavigationViewModel { get; private set; }
         public ObservableCollection<ITestCaseEditViewModel> TestCaseEditViewModels { get; private set; }
         public string TestCaseSuiteFile { get; private set; }
+        
+        public ObservableCollection<string> Environments
+        {
+            get; private set; 
+        }
+            
 
         //public MainWindowViewModel(Func<INavigationViewModel, EqTestCase, ITestCaseEditViewModel> testCaseEditVmCreator,
         //    Func<ITestCaseEditViewModel> testCaseEditVmCreator2,
@@ -80,26 +86,25 @@ namespace CPS_TestBatch_Manager.ViewModels
                 NavigationViewModel = navigationViewModel;
 
                 CloseTabCommand = new RelayCommand(p => CloseTab(p));
+                AddTestCaseCommand = new RelayCommand(p => AddTestCase(p));
                 LoadTestSuiteCommand = new RelayCommand(p => LoadTestCaseSuiteFile());
+                Environments = new ObservableCollection<string>() { "CAT", "CAS" };
             }
         }
 
-        private void OnTestCaseSaved(EqTestCase savedTestCase)
-        {
-            //var testCaseEditVmToSave = TestCaseEditViewModels.SingleOrDefault(vm => vm.TestCase.Id == savedTestCase.Id);
-            var navItemVm = NavigationViewModel.NavigationItems.SingleOrDefault(item => item.Id == savedTestCase.Id);
+        private void OnTestCaseSaved(EqTestCase testCase)
+        {            
+            var navItemVm = NavigationViewModel.NavigationItems.SingleOrDefault(item => item.Id == testCase.Id);
 
-            
+            var newOrUpdatesVm = new NavigationItemViewModel(testCase.Id, testCase.Name);
 
             if (navItemVm != null)
-            {
-                var updatedVm = new NavigationItemViewModel(savedTestCase.Id, savedTestCase.Name);
-
-                NavigationViewModel.NavigationItems.Remove(navItemVm);
-                NavigationViewModel.NavigationItems.Add(updatedVm);
-
-                SelectedNavigationItemViewModel = updatedVm;
+            {               
+                NavigationViewModel.NavigationItems.Remove(navItemVm);                
             }
+            
+            NavigationViewModel.NavigationItems.Add(newOrUpdatesVm);
+            SelectedNavigationItemViewModel = newOrUpdatesVm;
         }
 
         private void OnTestCaseDeleted(int testCaseId)
@@ -222,6 +227,16 @@ namespace CPS_TestBatch_Manager.ViewModels
                 TestCaseEditViewModels.Clear();
                 NavigationViewModel.Load(testSuiteFile);
             }            
+        }
+
+        public ICommand AddTestCaseCommand { get; private set; }
+
+        private void AddTestCase(object obj)
+        {
+            ITestCaseEditViewModel testCaseEditVm = _testCaseEditViewModelCreator2(TestCaseSuiteFile);
+            TestCaseEditViewModels.Add(testCaseEditVm);
+            testCaseEditVm.Load();
+            SelectedTestCaseEditViewModel = testCaseEditVm;
         }
 
         #endregion                
