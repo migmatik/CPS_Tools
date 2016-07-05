@@ -1,20 +1,18 @@
 ﻿using CPS_TestBatch_Manager.DataProvider;
-using CPS_TestBatch_Manager.DataProvider.Lookups;
 using CPS_TestBatch_Manager.Events;
 using CPS_TestBatch_Manager.Framework;
 using CPS_TestBatch_Manager.Models;
+using CPS_TestBatch_Manager.Utils;
 using CPS_TestBatch_Manager.Views.Dialogs;
 using CPS_TestBatch_Manager.Wrappers;
 using Prism.Events;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Xml.Serialization;
 
@@ -26,27 +24,28 @@ namespace CPS_TestBatch_Manager.ViewModels
 
         void Load(int? testCaseId = null);
     }
-    public class TestCaseEditViewModel: ViewModelBase, ITestCaseEditViewModel 
+
+    public class TestCaseEditViewModel : ViewModelBase, ITestCaseEditViewModel
     {
         //TODO: should load this from environment settings, eventually...
-        //private static readonly string CAT_FAKE_EQRSP_INPUT_DIR = @"\\F7CPA-SVC01\EqResponses\Miguel_Tests\NonTemplateResponses\";
-        private static readonly string CAT_FAKE_EQRSP_INPUT_DIR = @"G:\temp\CPS_TestBatch_Manager_Outputs\";
+        private static readonly string CAT_FAKE_EQRSP_INPUT_DIR = @"\\F7CPA-SVC01\EqResponses\Miguel_Tests\NonTemplateResponses\";
+        //private static readonly string CAT_FAKE_EQRSP_INPUT_DIR = @"G:\temp\CPS_TestBatch_Manager_Outputs\";
 
         private readonly IEventAggregator _eventAggregator;
         private readonly IMessageDialogService _messageDialogService;
-        private EqTestCaseWrapper _testCase;               
+        private EqTestCaseWrapper _testCase;
         private IEqTestCaseDataProvider _testCaseDataProvider;
         private ICaseIdDataProvider _caseIdDataProvider;
         private IIOService _openFileDialogService;
- 
-        public EqTestCaseWrapper TestCase 
+
+        public EqTestCaseWrapper TestCase
         {
             get { return _testCase; }
             set
             {
                 _testCase = value;
                 RaisePropertyChanged();
-            } 
+            }
         }
 
         private ResponseWrapper _selectedResponse;
@@ -57,17 +56,16 @@ namespace CPS_TestBatch_Manager.ViewModels
             {
                 _selectedResponse = value;
                 RaisePropertyChanged();
-                //((DelegateCommand)RemoveEmailCommand).RaiseCanExecuteChanged();
             }
         }
 
-        public string TestSuiteFile { get; private set; }     
+        public string TestSuiteFile { get; private set; }
         public EqResponseParameters ResponseParameterOptions { get; private set; }
         public INavigationViewModel NavigationViewModel { get; set; }
 
         private string _eqCourierIdCreated;
 
-        public string EqCourierIdCreated 
+        public string EqCourierIdCreated
         {
             get { return _eqCourierIdCreated; }
             set
@@ -79,8 +77,8 @@ namespace CPS_TestBatch_Manager.ViewModels
 
         public TestCaseEditViewModel(
             string filename, Func<string, IEqTestCaseDataProvider> testCaseDataProviderCreator,
-            IXmlSerializerService<EqResponseParameters> responseParamOptionsDataprovider, 
-            IEventAggregator eventAggregator, 
+            IXmlSerializerService<EqResponseParameters> responseParamOptionsDataprovider,
+            IEventAggregator eventAggregator,
             IMessageDialogService messageDialogService,
             ICaseIdDataProvider caseIdDataProvider,
             IIOService openFileDialogService)
@@ -97,84 +95,59 @@ namespace CPS_TestBatch_Manager.ViewModels
             AddResponseCommand = new RelayCommand(p => AddResponse(p));
             RemoveResponseCommand = new RelayCommand(p => RemoveResponse(p));
             InitializeCommands();
-        }            
-       
+        }
+
         public void Load(int? testCaseId = null)
         {
             var testCase = testCaseId.HasValue ? _testCaseDataProvider.GetEqTestCaseById(testCaseId.Value) : GetNewTestCase();
-
             TestCase = new EqTestCaseWrapper(testCase);
-
-            //TestCase.PropertyChanged += (s, e) =>
-            //    {
-            //        if(e.PropertyName == "IsChanged")
-            //        {
-            //            InvalidateCommands();
-            //        }
-
-            //        InvalidateCommands();
-            //    };
-        }
-
-        private void InvalidateCommands()
-        {
-            //((RelayCommand)SaveCommand).RaiseCanExecuteChanged();
-            //((RelayCommand)ResetCommand).RaiseCanExecuteChanged();
-            //((RelayCommand)DeleteCommand).RaiseCanExecuteChanged();
         }
 
         private EqTestCase GetNewTestCase()
         {
             return new EqTestCase
-            {               
+            {
                 EQListSimulationInput = new EqSimulatedInput
                 {
                     ResponseSettings = new ResponseSettings { ResponseChannel = new ResponseChannel() },
                     Responses = new List<Response>()
-                }
+                },
+                //TODO: should get this from config file or something
+                EqCourierPrefix = "SIM_"
             };
-        }       
+        }
 
         private void InitializeCommands()
         {
             SaveCommand = new RelayCommand(p => Save(), OnSaveCanExecute);
-            ResetCommand = new RelayCommand(p => ResetChanges());
+            ResetCommand = new RelayCommand(p => ResetChanges(), OnSaveCanExecute);
             DeleteCommand = new RelayCommand(p => Delete());
             RunCommand = new RelayCommand(p => RunTestCase());
             NavigateToLinkCommand = new RelayCommand(p => GoToLink(p));
-        }        
+        }
 
         private bool OnSaveCanExecute(object obj)
         {
-            return TestCase.IsChanged;            
+            return TestCase.IsChanged;
         }
 
-        private void GoToLink(object obj)
-        {
-            var response = obj as ResponseWrapper;
-
-            //TODO: show dialog message when file is not found
-
-            Process.Start(response.ResponseFile);
-        }
-                
         private List<string> _questionnaireIdList;
 
         public List<string> QuestionnaireIdList
         {
             get
             {
-                if( _questionnaireIdList == null)
+                if (_questionnaireIdList == null)
                 {
-                    _questionnaireIdList = ResponseParameterOptions.QuestionnaireIdOptions.Select(x => x.Value).ToList();                    
+                    _questionnaireIdList = ResponseParameterOptions.QuestionnaireIdOptions.Select(x => x.Value).ToList();
                 }
 
                 return _questionnaireIdList;
 
-            }            
+            }
             set
             {
-                _questionnaireIdList = value;                
+                _questionnaireIdList = value;
             }
         }
 
@@ -184,7 +157,7 @@ namespace CPS_TestBatch_Manager.ViewModels
         {
             get
             {
-                if(_selectedQuestionnaireId == null)
+                if (_selectedQuestionnaireId == null)
                 {
                     _selectedQuestionnaireId = TestCase.EQListSimulationInput.ResponseSettings.QuestionnaireId;
                 }
@@ -197,19 +170,19 @@ namespace CPS_TestBatch_Manager.ViewModels
                 _selectedQuestionnaireId = value;
                 TestCase.EQListSimulationInput.ResponseSettings.QuestionnaireId = value;
                 RaisePropertyChanged();
-            }            
+            }
         }
 
         private List<ResponseChannel> _responseChannelList;
 
         public List<ResponseChannel> ResponseChannelList
         {
-            get 
+            get
             {
-                if(_responseChannelList == null)
+                if (_responseChannelList == null)
                 {
                     _responseChannelList = ResponseParameterOptions.ResponseChannelOptions
-                        .Select(x => new ResponseChannel{ Id = x.Id, Value = x.Value }).ToList();                    
+                        .Select(x => new ResponseChannel { Id = x.Id, Value = x.Value }).ToList();
                 }
 
                 return _responseChannelList;
@@ -228,7 +201,7 @@ namespace CPS_TestBatch_Manager.ViewModels
             get
             {
                 if (_selectedResponseChannel == null)
-                {                    
+                {
                     _selectedResponseChannel = ResponseChannelList.SingleOrDefault(x => x.Id == TestCase.EQListSimulationInput.ResponseSettings.ResponseChannel.Id);
                 }
 
@@ -236,7 +209,7 @@ namespace CPS_TestBatch_Manager.ViewModels
             }
             set
             {
-                _selectedResponseChannel = value;               
+                _selectedResponseChannel = value;
                 TestCase.EQListSimulationInput.ResponseSettings.ResponseChannel.Id = value.Id;
                 TestCase.EQListSimulationInput.ResponseSettings.ResponseChannel.Value = value.Value;
                 RaisePropertyChanged();
@@ -267,107 +240,85 @@ namespace CPS_TestBatch_Manager.ViewModels
 
         public string SelectedResponseStatus
         {
-            get 
+            get
             {
                 if (string.IsNullOrEmpty(_selectedResponseStatus))
-                {                    
+                {
                     _selectedResponseStatus = ResponseStatusList.FirstOrDefault(x => x == TestCase.EQListSimulationInput.ResponseSettings.ResponseStatus);
                 }
 
-                return _selectedResponseStatus; 
+                return _selectedResponseStatus;
             }
             set
             {
-                _selectedResponseStatus = value;                
+                _selectedResponseStatus = value;
                 TestCase.EQListSimulationInput.ResponseSettings.ResponseStatus = value;
                 RaisePropertyChanged();
             }
         }
 
-        public ICommand NavigateToLinkCommand { get; set; }
-        
-        public ICommand SaveCommand { get; private set; }
-       
-        private void Save()
-        {            
-            _testCaseDataProvider.SaveEqTestCase(TestCase.Model);
-            TestCase.AcceptChanges();
-            _eventAggregator.GetEvent<TestCaseSavedEvent>().Publish(TestCase.Model);
-        }
-
-        public ICommand ResetCommand { get; private set; }
-
-        private void ResetChanges()
+        private OperationResult CreateResponseFileForFakeEqRspService(string packageFolder)
         {
-            TestCase.RejectChanges();
-            var selectedResponseChannel = ResponseChannelList.SingleOrDefault(r => r.Id == TestCase.EQListSimulationInput.ResponseSettings.ResponseChannel.Id);
-            
-            if(selectedResponseChannel != null)
-            {
-                SelectedResponseChannel = selectedResponseChannel;
-            }            
-        }
-       
-        public ICommand DeleteCommand { get; private set; }
-       
-        private void Delete()
-        {
-            var result = _messageDialogService.ShowYesNoDialog("Delete Test Case",
-                string.Format("Are you sure you want to delete Test Case '{0}'", TestCase),
-                MessageDialogResult.No);
+            var result = new OperationResult { Success = false };
 
-            if (result == MessageDialogResult.Yes)
+            if (AllResonseFilesExist(TestCase.EQListSimulationInput.Responses))
             {
-                _testCaseDataProvider.DeleteEqTestCase(TestCase.Id);
-                _eventAggregator.GetEvent<TestCaseDeletedEvent>().Publish(TestCase.Id);
+                GenerateCaseIdAndResponseIdIfNull();
+
+                Directory.CreateDirectory(packageFolder);
+
+                foreach (var response in TestCase.EQListSimulationInput.Responses)
+                {
+                    File.Copy(response.ResponseFile, string.Concat(CAT_FAKE_EQRSP_INPUT_DIR, response.ResponseId, ".xml"), true);
+                    File.Copy(response.ResponseFile, Path.Combine(packageFolder, string.Concat(response.ResponseId, ".xml")), true);
+                }
+
+                result.Success = true;
             }
-        }
-        
-        public ICommand RunCommand { get; private set; }        
 
-        private void RunTestCase()
-        {
-            string batchSuffix = EqInitInputFileCreator.GenerateBatchSuffix();
-
-            //CreateInputFileForSimulationEqList(TestBatchSuiteFileDirectory, batchSuffix);
-            CreateInputFileForSimulationEqList(@"G:\temp\CPS_TestBatch_Manager_Outputs", batchSuffix);
-            CreateResponseFileForFakeEqRspService();
-            //CreateEqInitInputFile(TestBatchSuiteFileDirectory, batchSuffix);
-            CreateEqInitInputFile(@"G:\temp\CPS_TestBatch_Manager_Outputs", batchSuffix);
+            return result;
         }
 
-        private void CreateResponseFileForFakeEqRspService()
+        private bool AllResonseFilesExist(ObservableCollection<ResponseWrapper> observableCollection)
         {
+            bool allFileExist = true;
+            var responseFilesNotFound = new StringBuilder();
+
             foreach (var response in TestCase.EQListSimulationInput.Responses)
             {
-                File.Copy(response.ResponseFile, string.Concat(CAT_FAKE_EQRSP_INPUT_DIR, response.ResponseId, ".xml"), true);
+                if (!File.Exists(response.ResponseFile))
+                {
+                    responseFilesNotFound.AppendLine(response.ResponseFile);
+                    allFileExist = false;
+                }
             }
+
+            if (!allFileExist)
+            {
+                var result = _messageDialogService.ShowOkDialog("Response File Not Found",
+                string.Format("Test Run aborted because the following file(s) were not found{0}{1}", Environment.NewLine, responseFilesNotFound.ToString()),
+                MessageDialogResult.Ok);
+            }
+
+            return allFileExist;
         }
 
         private void CreateInputFileForSimulationEqList(string outputDir, string suffix)
         {
-            GenerateCaseIdAndResponseIdIfNull();
-            SaveTestBatch(TestCase.Model, outputDir, suffix);
-            //_testCaseDataProvider.SaveTestBatch(TestCase.Model, outputDir, suffix);
-            //_dataProvider.SaveTestBatch(TestBatch.Model, outputDir, timestamp);
-        }
-
-        public void SaveTestBatch(EqTestCase testCase, string outDir, string suffix)
-        {
-            var ser = new XmlSerializer(testCase.EQListSimulationInput.GetType(), "");
+            var ser = new XmlSerializer(TestCase.Model.EQListSimulationInput.GetType(), "");
             var ns = new XmlSerializerNamespaces();
             ns.Add("", "");
 
-            string filename = Path.Combine(outDir, string.Concat(testCase.EqCourierPrefix, testCase.Name, "_", suffix, ".xml"));
+            string filename = Path.Combine(outputDir, string.Concat(TestCase.Model.EqCourierPrefix, TestCase.Model.Name, "_", suffix, ".xml"));
 
             using (StreamWriter writer = new StreamWriter(filename))
             {
-                ser.Serialize(writer, testCase.EQListSimulationInput, ns);
+                ser.Serialize(writer, TestCase.Model.EQListSimulationInput, ns);
             }
         }
-        
+
         private void GenerateCaseIdAndResponseIdIfNull()
-        {            
+        {
             foreach (var resp in TestCase.EQListSimulationInput.Responses)
             {
                 if (string.IsNullOrEmpty(resp.CaseId))
@@ -380,34 +331,95 @@ namespace CPS_TestBatch_Manager.ViewModels
                     resp.ResponseId = string.Concat("11", resp.CaseId);
                 }
             }
-        }        
+        }
 
-        private void CreateEqInitInputFile(string outputDir, string suffix)
+        private void CreateEqInitInputFile(string testCaseOutputDir, string suffix)
         {
-            EqInitInputFileCreator.Create(TestCase, outputDir, suffix);
-            EqCourierIdCreated = string.Concat(TestCase.EqCourierPrefix, suffix);
+            EqInitInputFileCreator.Create(TestCase, testCaseOutputDir, suffix);
+            var eqCourier = string.Concat(TestCase.EqCourierPrefix, suffix);
+            EqCourierIdCreated = string.Concat(eqCourier, Helper.GetMAD97(eqCourier));
         }
 
         #region Commands
+        public ICommand NavigateToLinkCommand { get; set; }
+
+        private void GoToLink(object obj)
+        {
+            var response = obj as ResponseWrapper;
+
+            //TODO: show dialog message when file is not found
+            Process.Start(response.ResponseFile);
+        }
+
+        public ICommand SaveCommand { get; private set; }
+
+        private void Save()
+        {
+            _testCaseDataProvider.SaveEqTestCase(TestCase.Model);
+            TestCase.AcceptChanges();
+            _eventAggregator.GetEvent<TestCaseSavedEvent>().Publish(TestCase.Model);
+        }
         public ICommand AddResponseCommand { get; private set; }
 
-        private void AddResponse(object p)
+        private void AddResponse(object obj)
         {
             string responseFile = _openFileDialogService.OpenFileDialog();
 
             if (!string.IsNullOrEmpty(responseFile))
             {
                 TestCase.EQListSimulationInput.Responses.Add(new ResponseWrapper(new Response { ResponseFile = responseFile }));
-            }                
-        }   
+            }
+        }
 
         public ICommand RemoveResponseCommand { get; private set; }
 
-        private void RemoveResponse(object p)
+        private void RemoveResponse(object obj)
         {
             TestCase.EQListSimulationInput.Responses.Remove(SelectedResponse);
         }
-         
+
+        public ICommand ResetCommand { get; private set; }
+
+        private void ResetChanges()
+        {
+            TestCase.RejectChanges();
+            var selectedResponseChannel = ResponseChannelList.SingleOrDefault(r => r.Id == TestCase.EQListSimulationInput.ResponseSettings.ResponseChannel.Id);
+
+            if (selectedResponseChannel != null)
+            {
+                SelectedResponseChannel = selectedResponseChannel;
+            }
+        }
+
+        public ICommand DeleteCommand { get; private set; }
+
+        private void Delete()
+        {
+            var result = _messageDialogService.ShowYesNoDialog("Delete Test Case",
+                string.Format("Are you sure you want to delete Test Case '{0}'", TestCase),
+                MessageDialogResult.No);
+
+            if (result == MessageDialogResult.Yes)
+            {
+                _testCaseDataProvider.DeleteEqTestCase(TestCase.Id);
+                _eventAggregator.GetEvent<TestCaseDeletedEvent>().Publish(TestCase.Id);
+            }
+        }
+
+        public ICommand RunCommand { get; private set; }
+
+        private void RunTestCase()
+        {
+            string batchSuffix = EqInitInputFileCreator.GenerateBatchSuffix();
+            var testCaseOutputDir = Path.Combine(Path.GetDirectoryName(this.TestSuiteFile), string.Concat(TestCase.Name, "_", batchSuffix));
+
+            if (CreateResponseFileForFakeEqRspService(testCaseOutputDir).Success)
+            {
+                CreateInputFileForSimulationEqList(testCaseOutputDir, batchSuffix);
+                CreateEqInitInputFile(testCaseOutputDir, batchSuffix);
+            }
+        }
+
         #endregion
     }
 }
