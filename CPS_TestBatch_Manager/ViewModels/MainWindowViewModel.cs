@@ -22,8 +22,10 @@ namespace CPS_TestBatch_Manager.ViewModels
         private readonly IEventAggregator _eventAggregator;
         private Func<INavigationViewModel, EqTestCase, ITestCaseEditViewModel> _testCaseEditViewModelCreator;
         private Func<string, ITestCaseEditViewModel> _testCaseEditViewModelCreator2;
+        private Func<Models.Environment, IEnvironmentViewModel> _environmentViewModelCreator;
         private ITestCaseEditViewModel _selectedTestCaseViewModel;
         private IIOService _openFileDialogService;
+        private IXmlSerializerService<EnvironmentSettings> _environmentSettingsDataProvider;
 
         public INavigationViewModel NavigationViewModel { get; private set; }
         public ObservableCollection<ITestCaseEditViewModel> TestCaseEditViewModels { get; private set; }
@@ -39,17 +41,34 @@ namespace CPS_TestBatch_Manager.ViewModels
                 RaisePropertyChanged();
             }
         }
-        public ObservableCollection<string> Environments
+
+        public List<CPS_TestBatch_Manager.Models.Environment> Environments
         {
             get;
             private set;
         }
 
+        private EnvironmentSettings _environmentSettings;
+
+        public EnvironmentSettings EnvironmentSettings
+        {
+            get { return _environmentSettings; }
+            private set
+            {
+                _environmentSettings = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        public ObservableCollection<IEnvironmentViewModel> EnvironmentViewModels { get; private set; }
+
         public MainWindowViewModel(Func<INavigationViewModel, EqTestCase, ITestCaseEditViewModel> testCaseEditVmCreator,
             IEventAggregator eventAggregator,
             Func<string, ITestCaseEditViewModel> testCaseEditVmCreator2,
+            Func<Models.Environment, IEnvironmentViewModel> environmentViewModelCreator,
             INavigationViewModel navigationViewModel,
-            IIOService openFileDialogService)
+            IIOService openFileDialogService,
+            IXmlSerializerService<EnvironmentSettings> environmentSettingsDataProvider)
         {
             if (IsInDesignMode)
             {
@@ -62,10 +81,12 @@ namespace CPS_TestBatch_Manager.ViewModels
                 _eventAggregator = eventAggregator;
                 _eventAggregator.GetEvent<TestCaseDeletedEvent>().Subscribe(OnTestCaseDeleted);
                 _eventAggregator.GetEvent<TestCaseSavedEvent>().Subscribe(OnTestCaseSaved);
+                _eventAggregator.GetEvent<EnvironmentSelectedEvent>().Subscribe(OnEnvironmentSelected);
                 _testCaseEditViewModelCreator2 = testCaseEditVmCreator2;
-
+                _environmentViewModelCreator = environmentViewModelCreator;
                 _testCaseEditViewModelCreator = testCaseEditVmCreator;
                 _openFileDialogService = openFileDialogService;
+                _environmentSettingsDataProvider = environmentSettingsDataProvider;
 
                 TestCaseEditViewModels = new ObservableCollection<ITestCaseEditViewModel>();
                 NavigationViewModel = navigationViewModel;
@@ -74,8 +95,29 @@ namespace CPS_TestBatch_Manager.ViewModels
                 AddTestCaseCommand = new RelayCommand(p => AddTestCase(p));
                 SelectEnvironmentCommand = new RelayCommand(p => SelectEnvironment(p));
                 LoadTestSuiteCommand = new RelayCommand(p => LoadTestCaseSuiteFile());
-                Environments = new ObservableCollection<string>() { "CAT", "CAS" };
+                UncheckAllEnvironmentCommand = new RelayCommand(p => UncheckEnvironments());
+                EnvironmentSettings = environmentSettingsDataProvider.XmlFileToObject();
+                Environments = EnvironmentSettings.Environments;
+
+                EnvironmentViewModels = new ObservableCollection<IEnvironmentViewModel>();
+
+                foreach (var env in Environments)
+                {
+                    var envVM = environmentViewModelCreator(env);
+                    EnvironmentViewModels.Add(envVM);
+                }
+
             }
+        }
+
+        private void OnEnvironmentSelected(EnvironmentViewModel environmentVm)
+        {
+            foreach(var envVm in EnvironmentViewModels)
+            {
+                envVm.IsChecked = false;
+            }
+
+            environmentVm.IsChecked = true;
         }
 
         private void OnTestCaseSaved(EqTestCase testCase)
@@ -225,6 +267,13 @@ namespace CPS_TestBatch_Manager.ViewModels
             mi.IsChecked = true;
 
             // throw new NotImplementedException();
+        }
+
+        public ICommand UncheckAllEnvironmentCommand { get; private set; }
+
+        private void UncheckEnvironments()
+        {
+            //EnvironmentViewModels.Select(x => x.IsChecked = false);
         }
 
         #endregion

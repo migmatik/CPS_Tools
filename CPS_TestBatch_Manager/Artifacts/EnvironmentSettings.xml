@@ -1,0 +1,8 @@
+<EnvironmentSettings>
+	<Environments>
+		<Environment Name="CAD" EQInitInputFolder="" OutputFolder="" />
+		<Environment Name="CAT" EQInitInputFolder="" OutputFolder="" />
+		<Environment Name="CAS" EQInitInputFolder="" OutputFolder="" />
+		<Environment Name="Local" EQInitInputFolder="G:\temp\" OutputFolder="G:\temp\" />
+	</Environments>
+</EnvironmentSettings>

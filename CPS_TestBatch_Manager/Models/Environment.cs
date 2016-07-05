@@ -2,20 +2,16 @@
 
 namespace CPS_TestBatch_Manager.Models
 {
-    public class EqTestCase
+    public class Environment
     {
-        [XmlAttributeAttribute()]
-        public int Id { get; set; }
-
         [XmlAttributeAttribute()]
         public string Name { get; set; }
 
         [XmlAttributeAttribute()]
-        public string EqCourierPrefix { get; set; }
+        public string EQInitInputFolder { get; set; }
 
-        public string Description { get; set; }
-
-        public EqSimulatedInput EQListSimulationInput { get; set; }
+        [XmlAttributeAttribute()]
+        public string OutputFolder { get; set; }
 
         public override string ToString()
         {
