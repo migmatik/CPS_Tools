@@ -9,8 +9,8 @@ using System.Threading.Tasks;
 
 namespace CPS_TestBatch_Manager.DataAccess
 {
-    public class TestCaseFileDataService: ITestCaseDataService
-    {        
+    public class TestCaseFileDataService : ITestCaseDataService
+    {
         private Func<string, IXmlSerializerService<EqTestSuite>> _testSuiteSerializerCreator;
         private string _filename;
 
@@ -19,7 +19,7 @@ namespace CPS_TestBatch_Manager.DataAccess
             _testSuiteSerializerCreator = testSuiteSerializerCreator;
             _filename = filename;
         }
-        
+
         public EqTestCase GetTestCaseById(int id)
         {
             var testCases = ReadFromFile();
@@ -28,7 +28,7 @@ namespace CPS_TestBatch_Manager.DataAccess
 
         public void SaveTestCase(EqTestCase testCase)
         {
-            if(testCase.Id <= 0)
+            if (testCase.Id <= 0)
             {
                 InsertTestCase(testCase);
             }
@@ -70,9 +70,13 @@ namespace CPS_TestBatch_Manager.DataAccess
         public void DeleteTestCase(int id)
         {
             var testCases = ReadFromFile().ToList();
-            var testCaseToDelete = testCases.Single(tc => tc.Id == id);
-            testCases.Remove(testCaseToDelete);
-            SaveToFile(testCases);
+            var testCaseToDelete = testCases.SingleOrDefault(tc => tc.Id == id);
+
+            if (testCaseToDelete != null)
+            {
+                testCases.Remove(testCaseToDelete);
+                SaveToFile(testCases);
+            }
         }
 
         public IEnumerable<EqTestCase> GetAllTestCases()
@@ -85,7 +89,7 @@ namespace CPS_TestBatch_Manager.DataAccess
             EqTestSuite testSuite;
 
             using (var service = _testSuiteSerializerCreator(_filename))
-            {             
+            {
                 testSuite = service.XmlFileToObject();
             }
 

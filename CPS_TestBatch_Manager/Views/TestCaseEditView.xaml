@@ -28,30 +28,30 @@
         <Label Content="Questionnaire Id" Grid.Row="1" Margin="5"/>
         <!--<ComboBox ItemsSource="{Binding QuestionnaireIdList}" SelectedItem="{Binding TestCase.QuestionnaireId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1" Grid.Column="1" Margin="5 10"/>-->
         <ComboBox ItemsSource="{Binding QuestionnaireIdList}" SelectedItem="{Binding TestCase.EQListSimulationInput.ResponseSettings.QuestionnaireId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1" Grid.Column="1" Margin="5 10"/>
-      
+
         <Label Content="Response Channel" Grid.Row="2" Margin="5"/>
         <ComboBox ItemsSource="{Binding ResponseChannelList}" SelectedItem="{Binding SelectedResponseChannel, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="2" Grid.Column="1" Margin="5 10"/>
-      
+
         <Label Content="Response Status" Grid.Row="3" Margin="5"/>
         <ComboBox ItemsSource="{Binding ResponseStatusList}" SelectedItem="{Binding TestCase.EQListSimulationInput.ResponseSettings.ResponseStatus, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="3" Grid.Column="1" Margin="5 10"/>
-      
+
         <Label Content="Batch Prefix" Grid.Row="4" Margin="5"/>
-        <TextBox Text="{Binding TestCase.EqCourierPrefix, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="4" Grid.Column="1" Margin="5"/>
+        <TextBox Text="{Binding TestCase.EqCourierPrefix, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="4" Grid.Column="1" Margin="5" ToolTip="Use 'SIM_' prefix to use EQ simulation mode"/>
 
         <Label Content="Description" Grid.Row="5" Margin="5"/>
         <TextBox Text="{Binding TestCase.Description, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="5" Grid.RowSpan="6" Grid.Column="1"  Margin="5,5,5,0" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" Height="Auto" MaxHeight="200" VerticalAlignment="Top"/>
 
-        <GroupBox Header="Response Files" Grid.Column="2" Grid.RowSpan="6" HorizontalAlignment="Left" Height="280" FontWeight="Normal" VerticalAlignment="Top" Width="Auto">            
+        <GroupBox Header="Response Files" Grid.Column="2" Grid.RowSpan="6" HorizontalAlignment="Left" Height="280" FontWeight="Normal" VerticalAlignment="Top" Width="Auto">
             <StackPanel Grid.Row="1">
                 <StackPanel Orientation="Horizontal">
                     <Button Command="{Binding AddResponseCommand}" Style="{StaticResource AddButtonStyle}" HorizontalAlignment="Right"/>
                     <Button Command="{Binding RemoveResponseCommand}" Style="{StaticResource RemoveButtonStyle}" HorizontalAlignment="Right"/>
                 </StackPanel>
-                <DataGrid Name="ResponseGrid" ItemsSource="{Binding TestCase.EQListSimulationInput.Responses}" SelectedItem="{Binding SelectedResponse,Mode=TwoWay}" AutoGenerateColumns="false"  MaxHeight="200" FontSize="12">                    
+                <DataGrid Name="ResponseGrid" ItemsSource="{Binding TestCase.EQListSimulationInput.Responses}" SelectedItem="{Binding SelectedResponse,Mode=TwoWay}" AutoGenerateColumns="false"  MaxHeight="200" FontSize="12">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Case Id" Binding="{Binding CaseId,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
                         <DataGridTextColumn Header="Response Id" Binding="{Binding ResponseId,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
-                        <!--<DataGridTextColumn Header="Response File" Binding="{Binding ResponseFile,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>-->                        
+                        <!--<DataGridTextColumn Header="Response File" Binding="{Binding ResponseFile,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>-->
                         <DataGridTemplateColumn Header="File Name">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
@@ -64,8 +64,8 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        
-                    </DataGrid.Columns>                    
+
+                    </DataGrid.Columns>
                 </DataGrid>
                 <!--<Button Content="Add Response File" Command="{Binding AddEqResponseCommand}" Margin="5" Width="120"/>-->
             </StackPanel>
@@ -75,9 +75,9 @@
             <Button Content="Save" Command="{Binding SaveCommand}" Margin="5"/>
             <Button Content="Reset" Command="{Binding ResetCommand}" Margin="5"/>
             <Button Content="Delete" Command="{Binding DeleteCommand}" Margin="5"/>
-            <Button Content="RUN TEST" Command="{Binding RunCommand}" Margin="100 5" Background="Green" />
+            <Button Content="Create Batch" Command="{Binding RunCommand}" Margin="100 5 5 5" Background="Green" />
             <Label Content="EQ Batch:" />
-            <TextBox Text="{Binding EqCourierIdCreated}" Width="Auto" IsReadOnly="True"/>
+            <TextBox Text="{Binding EqCourierIdCreated}" Width="Auto" IsReadOnly="True" Background="Transparent" BorderThickness="0"/>
         </StackPanel>
     </Grid>
 </UserControl>

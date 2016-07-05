@@ -91,6 +91,8 @@
     <Compile Include="Models\ResponseChannel.cs" />
     <Compile Include="Models\Response.cs" />
     <Compile Include="Models\ResponseSettings.cs" />
+    <Compile Include="Utils\Helper.cs" />
+    <Compile Include="Utils\OperationResult.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Compile Include="ViewModels\TestCaseEditViewModel.cs" />
     <Compile Include="ViewModels\NavigationViewModel.cs" />
@@ -192,9 +194,7 @@
     </Content>
     <Resource Include="SampleData\SampleEqTestSuite.xml" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Services\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

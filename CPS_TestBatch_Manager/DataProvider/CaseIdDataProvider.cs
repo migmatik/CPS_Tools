@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CPS_TestBatch_Manager.DataProvider
 {
-    public class CaseIdDataProvider: ICaseIdDataProvider
+    public class CaseIdDataProvider : ICaseIdDataProvider
     {
         private Func<string, ICaseIdDataService> _dataServiceCreator;
 
@@ -20,7 +20,7 @@ namespace CPS_TestBatch_Manager.DataProvider
         {
             var filename = GetFilename(questionnaireId);
 
-            using(var service = _dataServiceCreator(filename))
+            using (var service = _dataServiceCreator(filename))
             {
                 return service.GetCaseId();
             }
@@ -28,9 +28,10 @@ namespace CPS_TestBatch_Manager.DataProvider
 
         private string GetFilename(string questionnaireId)
         {
-            return questionnaireId.Contains("N1") 
-                ? @"G:\temp\CPS_TestBatch_Manager_Outputs\CaseIdFiles\Mig_N1_CaseId.txt"
-                : @"G:\temp\CPS_TestBatch_Manager_Outputs\CaseIdFiles\Mig_2A_CaseId.txt";
+            //TODO: get rid of magic strings, use a config file or something....
+            return questionnaireId.Contains("N1")
+                ? @"\\F7CPA-SVC01\EqResponses\Miguel_Tests\Build_E2\CaseIdForSimulation\CAT\Mig_N1_CaseId.txt"
+                : @"\\F7CPA-SVC01\EqResponses\Miguel_Tests\Build_E2\CaseIdForSimulation\CAT\Mig_2A_CaseId.txt";
         }
     }
 }
