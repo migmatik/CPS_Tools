@@ -296,7 +296,7 @@ namespace CPS_TestBatch_Manager.ViewModels
             if (!allFileExist)
             {
                 var result = _messageDialogService.ShowOkDialog("Response File Not Found",
-                string.Format("Test Run aborted because the following file(s) were not found{0}{1}", Environment.NewLine, responseFilesNotFound.ToString()),
+                string.Format("Test Run aborted because the following file(s) were not found{0}{1}", System.Environment.NewLine, responseFilesNotFound.ToString()),
                 MessageDialogResult.Ok);
             }
 

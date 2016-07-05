@@ -68,6 +68,7 @@
     <Compile Include="DataAccess\CaseIdFileDataService.cs" />
     <Compile Include="DataAccess\ICaseIdDataService.cs" />
     <Compile Include="DataProvider\CaseIdDataProvider.cs" />
+    <Compile Include="DataProvider\EnvironmentSettingsDataProvider.cs" />
     <Compile Include="DataProvider\EqTestCaseDataProvider.cs" />
     <Compile Include="DataProvider\FileToPocoSerializer.cs" />
     <Compile Include="DataProvider\ICaseIdDataProvider.cs" />
@@ -81,8 +82,11 @@
     <Compile Include="DataProvider\OpenFileDialogService.cs" />
     <Compile Include="DataProvider\ResponseParameterOptionsService.cs" />
     <Compile Include="DataAccess\TestCaseFileDataService.cs" />
+    <Compile Include="Events\EnvironmentSelectedEvent.cs" />
     <Compile Include="Events\TestCaseSavedEvent.cs" />
     <Compile Include="Events\TestCaseDeletedEvent.cs" />
+    <Compile Include="Models\Environment.cs" />
+    <Compile Include="Models\EnvironmentSettings.cs" />
     <Compile Include="Models\EqInitInputTemplate.cs" />
     <Compile Include="Models\EqResponseParameters.cs" />
     <Compile Include="Models\EqSimulatedInput.cs" />
@@ -93,6 +97,7 @@
     <Compile Include="Models\ResponseSettings.cs" />
     <Compile Include="Utils\Helper.cs" />
     <Compile Include="Utils\OperationResult.cs" />
+    <Compile Include="ViewModels\EnvironmentViewModel.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Compile Include="ViewModels\TestCaseEditViewModel.cs" />
     <Compile Include="ViewModels\NavigationViewModel.cs" />
@@ -106,6 +111,7 @@
       <DependentUpon>TestCaseEditView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Wrappers\ChangeTrackingCollection.cs" />
+    <Compile Include="Wrappers\EnvironmentWrapper.cs" />
     <Compile Include="Wrappers\EqSimulatedInputWrapper.cs" />
     <Compile Include="Wrappers\EqTestCaseWrapper.cs" />
     <Compile Include="Wrappers\IValidatableTrackingObject.cs" />
@@ -189,6 +195,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Artifacts\EnvironmentSettings.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Artifacts\EqResponseParameters.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

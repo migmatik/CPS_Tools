@@ -22,8 +22,18 @@
                 <MenuItem x:Name="MenuItemOpenFile" Header="Open..." Command="{Binding LoadTestSuiteCommand, Mode=OneWay}"/>
                 <MenuItem x:Name="MenuItemSaveFile" Header="Save"/>
             </MenuItem>
-            <MenuItem Header="Environments" Name="EnvMenu" ItemsSource="{Binding Environments}">
-                <!--
+            <MenuItem Header="Environments" Name="EnvMenu" ItemsSource="{Binding EnvironmentViewModels}" Command="{Binding UncheckAllEnvironmentCommand}">
+                <MenuItem.ItemContainerStyle>
+                    <Style TargetType="MenuItem">
+                        <Setter Property="Header" Value="{Binding}"/>
+                        <Setter Property="IsChecked" Value="{Binding IsChecked}" />
+                        <Setter Property="Command" Value="{Binding CheckCommand}" />
+
+                    </Style>
+                </MenuItem.ItemContainerStyle>
+
+
+                    <!--
                 <MenuItem Header="CAD" IsCheckable="True" Command="{Binding SelectEnvironmentCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}" />
                 <MenuItem Header="CAT" IsCheckable="True" Command="{Binding SelectEnvironmentCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}" />
                 <MenuItem Header="CAS" IsCheckable="True" Command="{Binding SelectEnvironmentCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}" />

@@ -7,7 +7,7 @@ using System.Text;
 
 namespace CPS_TestBatch_Manager.Wrappers
 {
-    public class ResponseWrapper: ModelWrapper<Response>
+    public class ResponseWrapper : ModelWrapper<Response>
     {
         public ResponseWrapper(Response model): base(model)
         {
