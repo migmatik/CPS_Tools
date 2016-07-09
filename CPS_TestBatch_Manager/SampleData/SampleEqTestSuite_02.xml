@@ -19,7 +19,7 @@
       <Description>description for test batch 2 test</Description>
       <EQListSimulationInput>
         <ResponseSettings>
-          <ResponseChannel id="1">RESPONDENT_ELECTRONIC</ResponseChannel>
+          <ResponseChannel id="5">INTERVIEWER_TELEPHONE_FEFU_ELECTRONIC</ResponseChannel>
           <QuestionnaireId>C2A916</QuestionnaireId>
           <ResponseStatus>SUBMITTED</ResponseStatus>
         </ResponseSettings>

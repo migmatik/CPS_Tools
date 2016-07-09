@@ -5,7 +5,7 @@
         xmlns:view="clr-namespace:CPS_TestBatch_Manager.Views"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="CPS Test Batch Manager" Height="600" Width="1200">
+        Title="CPS EQ Test Case Tool" Height="600" Width="1200">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
@@ -14,26 +14,27 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" MinHeight="26"/>
             <RowDefinition/>
+            <RowDefinition Height="Auto" MinHeight="30" />
         </Grid.RowDefinitions>
         <Menu x:Name="MainMenu" HorizontalContentAlignment="Center" Grid.Row="0" FontSize="14" Margin="0,0,0,3">
-            <MenuItem Header="File" FontSize="16">
+            <MenuItem Header="File" FontSize="14">
                 <MenuItem x:Name="MenuItemNewFile" Header="New..."/>
                 <Separator/>
                 <MenuItem x:Name="MenuItemOpenFile" Header="Open..." Command="{Binding LoadTestSuiteCommand, Mode=OneWay}"/>
                 <MenuItem x:Name="MenuItemSaveFile" Header="Save"/>
             </MenuItem>
-            <MenuItem Header="Environments" Name="EnvMenu" ItemsSource="{Binding EnvironmentViewModels}" Command="{Binding UncheckAllEnvironmentCommand}">
+            <MenuItem Header="Environments" FontSize="14" Name="EnvMenu" ItemsSource="{Binding EnvironmentViewModels}" Command="{Binding UncheckAllEnvironmentCommand}">
                 <MenuItem.ItemContainerStyle>
                     <Style TargetType="MenuItem">
                         <Setter Property="Header" Value="{Binding}"/>
                         <Setter Property="IsChecked" Value="{Binding IsChecked}" />
                         <Setter Property="Command" Value="{Binding CheckCommand}" />
-
+                        <Setter Property="FontSize" Value="14"/>
                     </Style>
                 </MenuItem.ItemContainerStyle>
 
 
-                    <!--
+                <!--
                 <MenuItem Header="CAD" IsCheckable="True" Command="{Binding SelectEnvironmentCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}" />
                 <MenuItem Header="CAT" IsCheckable="True" Command="{Binding SelectEnvironmentCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}" />
                 <MenuItem Header="CAS" IsCheckable="True" Command="{Binding SelectEnvironmentCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}" />
@@ -69,11 +70,16 @@
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="{Binding TestCase.Name, ValidatesOnNotifyDataErrors=False}" Margin="15 0"/>
-                            <Button Content="X" 
+                            <!--<Button Content="X"  Style="{StaticResource RemoveButtonStyle}"
                                     Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type TabControl}}, Path=DataContext.CloseTabCommand}"
                                     CommandParameter="{Binding}"
                                     Width="20" Height="20" FontWeight="Bold" FontSize="12"
                                     Foreground="White" Padding="0">
+                            </Button>-->
+                            <Button Style="{StaticResource CloseTabButtonStyle}"
+                                    Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type TabControl}}, Path=DataContext.CloseTabCommand}"
+                                    CommandParameter="{Binding}"
+                                   >
                             </Button>
                         </StackPanel>
                     </DataTemplate>
@@ -85,5 +91,32 @@
                 </TabControl.ContentTemplate>
             </TabControl>
         </Grid>
+        <StatusBar Grid.Row="2" VerticalAlignment="Bottom" Background="LightGray" FontSize="15">
+            <StatusBarItem>
+                <TextBlock Text="Version:" Foreground="Black"/>
+            </StatusBarItem>
+            <StatusBarItem>
+                <TextBlock Text="{Binding ApplicationVersion}" Foreground="Black"/>
+            </StatusBarItem>
+            <Separator/>
+            <StatusBarItem>
+                <TextBlock Text="Environment:" Foreground="Black" />
+            </StatusBarItem>
+            <StatusBarItem>
+                <TextBlock Text="{Binding SelectedEnvironmentViewModel.Environment.Name}" Foreground="Black" FontWeight="SemiBold" />
+            </StatusBarItem>
+            <Separator/>
+            <StatusBarItem>
+                <TextBlock Text="File:" Foreground="Black" />
+            </StatusBarItem>
+            <StatusBarItem>
+                <TextBlock>
+                    <Hyperlink Command="{Binding ViewTestCaseSuiteFileCommand}"
+                        CommandParameter="{Binding TestCaseSuiteFile}">
+                        <TextBlock Text="{Binding TestCaseSuiteFile}" />
+                    </Hyperlink>
+                </TextBlock>
+            </StatusBarItem>
+        </StatusBar>
     </Grid>
 </Window>

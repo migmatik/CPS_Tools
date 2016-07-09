@@ -22,5 +22,17 @@ namespace CPS_TestBatch_Manager.Properties {
                 return defaultInstance;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("CAT")]
+        public string SelectedEnvironment {
+            get {
+                return ((string)(this["SelectedEnvironment"]));
+            }
+            set {
+                this["SelectedEnvironment"] = value;
+            }
+        }
     }
 }

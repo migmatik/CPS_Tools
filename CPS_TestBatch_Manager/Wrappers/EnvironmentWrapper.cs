@@ -1,12 +1,14 @@
-﻿using CPS_TestBatch_Manager.Models;
+﻿using CPS_TestBatch_Manager.Configuration;
+using CPS_TestBatch_Manager.Models;
 
 namespace CPS_TestBatch_Manager.Wrappers
 {
-    public class EnvironmentWrapper : ModelWrapper<Environment>
+    public class EnvironmentWrapper : ModelWrapper<IEnvironment>
     {
-        public EnvironmentWrapper(Environment model): base(model)
+        public EnvironmentWrapper(IEnvironment model)
+            : base(model)
         {
-            
+
         }
 
         public string Name

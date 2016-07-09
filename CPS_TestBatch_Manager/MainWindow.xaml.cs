@@ -1,6 +1,11 @@
 ﻿using CPS_TestBatch_Manager.ViewModels;
 using System;
 using System.Windows;
+using System.Configuration;
+using System.Collections.Specialized;
+using CPS_TestBatch_Manager.Configuration;
+
+
 
 namespace CPS_TestBatch_Manager
 {
@@ -21,16 +26,22 @@ namespace CPS_TestBatch_Manager
             InitializeComponent();
 
             // TODO: probably not necessary since file will be open from Main Menu, unless we want the app to load the last loaded file on startup
-            //this.Loaded += MainWindow_Loaded;
-
-            
+            //this.Loaded += MainWindow_Loaded;           
             _viewModel = viewModel;
             DataContext = _viewModel;
         }
 
-        void MainWindow_Loaded(object sender, RoutedEventArgs e)
+        protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
         {
-            //_viewModel.Load();
-        }              
+            var result = _viewModel.ConfirmClosingUnsavedTestCases();
+            e.Cancel = result == Views.Dialogs.MessageDialogResult.No;
+            base.OnClosing(e);
+            Properties.Settings.Default.Save();
+        }
+
+        //void MainWindow_Loaded(object sender, RoutedEventArgs e)
+        //{
+        //    //_viewModel.Load();
+        //}              
     }
 }

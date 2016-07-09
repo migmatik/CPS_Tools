@@ -1,4 +1,5 @@
-﻿using CPS_TestBatch_Manager.DataProvider;
+﻿using CPS_TestBatch_Manager.Configuration;
+using CPS_TestBatch_Manager.DataProvider;
 using CPS_TestBatch_Manager.Events;
 using CPS_TestBatch_Manager.Framework;
 using CPS_TestBatch_Manager.Models;
@@ -21,8 +22,9 @@ namespace CPS_TestBatch_Manager.ViewModels
     public interface ITestCaseEditViewModel
     {
         EqTestCaseWrapper TestCase { get; set; }
-
+        IEnvironment CurrentEnvironment { get; set; }
         void Load(int? testCaseId = null);
+        void Save();
     }
 
     public class TestCaseEditViewModel : ViewModelBase, ITestCaseEditViewModel
@@ -37,6 +39,17 @@ namespace CPS_TestBatch_Manager.ViewModels
         private IEqTestCaseDataProvider _testCaseDataProvider;
         private ICaseIdDataProvider _caseIdDataProvider;
         private IIOService _openFileDialogService;
+        IEnvironment _currentEnvironment;
+
+        public IEnvironment CurrentEnvironment
+        {
+            get { return _currentEnvironment; }
+            set
+            {
+                _currentEnvironment = value;
+                RaisePropertyChanged();
+            }
+        }
 
         public EqTestCaseWrapper TestCase
         {
@@ -76,7 +89,7 @@ namespace CPS_TestBatch_Manager.ViewModels
         }
 
         public TestCaseEditViewModel(
-            string filename, Func<string, IEqTestCaseDataProvider> testCaseDataProviderCreator,
+            string filename, IEnvironment currentEnvironment, Func<string, IEqTestCaseDataProvider> testCaseDataProviderCreator,
             IXmlSerializerService<EqResponseParameters> responseParamOptionsDataprovider,
             IEventAggregator eventAggregator,
             IMessageDialogService messageDialogService,
@@ -92,6 +105,7 @@ namespace CPS_TestBatch_Manager.ViewModels
             _openFileDialogService = openFileDialogService;
             ResponseParameterOptions = responseParamOptionsDataprovider.XmlFileToObject();
             TestSuiteFile = filename;
+            _currentEnvironment = currentEnvironment;
             AddResponseCommand = new RelayCommand(p => AddResponse(p));
             RemoveResponseCommand = new RelayCommand(p => RemoveResponse(p));
             InitializeCommands();
@@ -143,7 +157,6 @@ namespace CPS_TestBatch_Manager.ViewModels
                 }
 
                 return _questionnaireIdList;
-
             }
             set
             {
@@ -269,7 +282,8 @@ namespace CPS_TestBatch_Manager.ViewModels
 
                 foreach (var response in TestCase.EQListSimulationInput.Responses)
                 {
-                    File.Copy(response.ResponseFile, string.Concat(CAT_FAKE_EQRSP_INPUT_DIR, response.ResponseId, ".xml"), true);
+                    //File.Copy(response.ResponseFile, string.Concat(CAT_FAKE_EQRSP_INPUT_DIR, response.ResponseId, ".xml"), true);
+                    File.Copy(response.ResponseFile, Path.Combine(CurrentEnvironment.OutputFolder, string.Concat(response.ResponseId, ".xml")), true);
                     File.Copy(response.ResponseFile, Path.Combine(packageFolder, string.Concat(response.ResponseId, ".xml")), true);
                 }
 
@@ -335,7 +349,7 @@ namespace CPS_TestBatch_Manager.ViewModels
 
         private void CreateEqInitInputFile(string testCaseOutputDir, string suffix)
         {
-            EqInitInputFileCreator.Create(TestCase, testCaseOutputDir, suffix);
+            EqInitInputFileCreator.Create(TestCase, CurrentEnvironment.EQInitInputFolder, testCaseOutputDir, suffix);
             var eqCourier = string.Concat(TestCase.EqCourierPrefix, suffix);
             EqCourierIdCreated = string.Concat(eqCourier, Helper.GetMAD97(eqCourier));
         }
@@ -347,18 +361,24 @@ namespace CPS_TestBatch_Manager.ViewModels
         {
             var response = obj as ResponseWrapper;
 
-            //TODO: show dialog message when file is not found
+            if (!File.Exists(response.ResponseFile))
+            {
+                _messageDialogService.ShowOkDialog("File Not Found", string.Format("Unable to find file {0}", response.ResponseFile), MessageDialogResult.Ok);
+                return;
+            }
+
             Process.Start(response.ResponseFile);
         }
 
         public ICommand SaveCommand { get; private set; }
 
-        private void Save()
+        public void Save()
         {
             _testCaseDataProvider.SaveEqTestCase(TestCase.Model);
             TestCase.AcceptChanges();
             _eventAggregator.GetEvent<TestCaseSavedEvent>().Publish(TestCase.Model);
         }
+
         public ICommand AddResponseCommand { get; private set; }
 
         private void AddResponse(object obj)

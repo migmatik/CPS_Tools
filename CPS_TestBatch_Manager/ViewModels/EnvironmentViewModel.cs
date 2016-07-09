@@ -1,4 +1,5 @@
-﻿using CPS_TestBatch_Manager.Events;
+﻿using CPS_TestBatch_Manager.Configuration;
+using CPS_TestBatch_Manager.Events;
 using CPS_TestBatch_Manager.Framework;
 using CPS_TestBatch_Manager.Wrappers;
 using Prism.Events;
@@ -17,15 +18,15 @@ namespace CPS_TestBatch_Manager.ViewModels
         bool IsChecked { get; set; }
     }
 
-    public class EnvironmentViewModel: ViewModelBase, IEnvironmentViewModel 
+    public class EnvironmentViewModel : ViewModelBase, IEnvironmentViewModel
     {
         private readonly IEventAggregator _eventAggregator;
 
-        public EnvironmentViewModel(IEventAggregator eventAggregator, Models.Environment environment)
+        public EnvironmentViewModel(IEventAggregator eventAggregator, IEnvironment environment)
         {
             _eventAggregator = eventAggregator;
 
-            Environment = new EnvironmentWrapper(environment);                
+            Environment = new EnvironmentWrapper(environment);
         }
 
         private EnvironmentWrapper _environment;
@@ -52,16 +53,16 @@ namespace CPS_TestBatch_Manager.ViewModels
         }
 
         private ICommand _checkCommand;
-        public ICommand CheckCommand 
-        { 
+        public ICommand CheckCommand
+        {
             get
             {
-              if(_checkCommand == null)
-              {
-                  _checkCommand = new RelayCommand(p => Check(p));
-              }
+                if (_checkCommand == null)
+                {
+                    _checkCommand = new RelayCommand(p => Check(p));
+                }
 
-              return _checkCommand;
+                return _checkCommand;
             }
             set
             {
