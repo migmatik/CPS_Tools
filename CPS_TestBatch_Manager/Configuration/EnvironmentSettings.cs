@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace CPS_TestBatch_Manager.Configuration
 {
-    public class EnvironmentConfig: ConfigurationSection
+    public class EnvironmentSettings: ConfigurationSection
     {
         [ConfigurationProperty("", IsRequired = true, IsDefaultCollection = true)]
         public EnvironmentCollection Environments
