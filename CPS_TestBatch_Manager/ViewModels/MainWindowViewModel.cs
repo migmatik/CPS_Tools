@@ -24,21 +24,19 @@ namespace CPS_TestBatch_Manager.ViewModels
     public class MainWindowViewModel : ViewModelBase
     {
         private readonly IEventAggregator _eventAggregator;
-        private Func<string, IEnvironment, ITestCaseEditViewModel> _testCaseEditViewModelCreator;
-        //private Func<Models.Environment, IEnvironmentViewModel> _environmentViewModelCreator;
+        private Func<string, IEnvironment, ITestCaseEditViewModel> _testCaseEditViewModelCreator;      
         private Func<IEnvironment, IEnvironmentViewModel> _environmentViewModelCreator;
         private ITestCaseEditViewModel _selectedTestCaseViewModel;
-        private IIOService _openFileDialogService;
-        // private IXmlSerializerService<EnvironmentSettings> _environmentSettingsDataProvider;
+        private IIOService _openFileDialogService;       
         private readonly IMessageDialogService _messageDialogService;
 
         public string ApplicationVersion { get; set; }
         public INavigationViewModel NavigationViewModel { get; private set; }
         public ObservableCollection<ITestCaseEditViewModel> TestCaseEditViewModels { get; private set; }
 
-        private EnvironmentConfig _environmentConfig;
+        private EnvironmentSettings _environmentConfig;
 
-        public EnvironmentConfig EnvironmentConfig
+        public EnvironmentSettings EnvironmentConfig
         {
             get { return _environmentConfig; }
             set
@@ -69,37 +67,7 @@ namespace CPS_TestBatch_Manager.ViewModels
                 _canAddTestCase = value;
                 RaisePropertyChanged();
             }
-        }
-
-        //public List<IEnvironment> Environments
-        //{
-        //    get;
-        //    private set;
-        //}
-
-        //private EnvironmentSettings _environmentSettings;
-
-        //public EnvironmentSettings EnvironmentSettings
-        //{
-        //    get { return _environmentSettings; }
-        //    private set
-        //    {
-        //        _environmentSettings = value;
-        //        RaisePropertyChanged();
-        //    }
-        //}
-
-        //private IEnvironmentViewModel _selectedEnvironmentViewModel;
-
-        //public IEnvironmentViewModel SelectedEnvironmentViewModel 
-        //{
-        //    get { return _selectedEnvironmentViewModel; } 
-        //    set
-        //    {
-        //        _selectedEnvironmentViewModel = value;
-        //        RaisePropertyChanged();
-        //    }
-        //}
+        }       
 
         private IEnvironmentViewModel _selectedEnvironmentViewModel;
 
@@ -112,18 +80,15 @@ namespace CPS_TestBatch_Manager.ViewModels
                 RaisePropertyChanged();
             }
         }
-
-        //public ObservableCollection<IEnvironmentViewModel> EnvironmentViewModels { get; private set; }
+        
         public ObservableCollection<IEnvironmentViewModel> EnvironmentViewModels { get; private set; }
 
         public MainWindowViewModel(
             IEventAggregator eventAggregator,
-            Func<string, IEnvironment, ITestCaseEditViewModel> testCaseEditVmCreator,
-            //Func<Models.IEnvironment, IEnvironmentViewModel> environmentViewModelCreator,
+            Func<string, IEnvironment, ITestCaseEditViewModel> testCaseEditVmCreator,           
             Func<IEnvironment, IEnvironmentViewModel> environmentViewModelCreator,
             INavigationViewModel navigationViewModel,
-            IIOService openFileDialogService,
-            //IXmlSerializerService<EnvironmentSettings> environmentSettingsDataProvider,
+            IIOService openFileDialogService,            
             IMessageDialogService messageDialogService)
         {
             if (IsInDesignMode)
@@ -137,28 +102,25 @@ namespace CPS_TestBatch_Manager.ViewModels
             {
                 _eventAggregator = eventAggregator;
                 _eventAggregator.GetEvent<TestCaseDeletedEvent>().Subscribe(OnTestCaseDeleted);
-                _eventAggregator.GetEvent<TestCaseSavedEvent>().Subscribe(OnTestCaseSaved);
-                //_eventAggregator.GetEvent<EnvironmentSelectedEvent>().Subscribe(OnEnvironmentSelected);
+                _eventAggregator.GetEvent<TestCaseSavedEvent>().Subscribe(OnTestCaseSaved);             
                 _eventAggregator.GetEvent<EnvironmentSelectedEvent>().Subscribe(OnEnvironmentSelected);
-                _testCaseEditViewModelCreator = testCaseEditVmCreator;
-                //_environmentViewModelCreator = environmentViewModelCreator;
+                _testCaseEditViewModelCreator = testCaseEditVmCreator;               
                 _environmentViewModelCreator = environmentViewModelCreator;
-                _openFileDialogService = openFileDialogService;
-                //_environmentSettingsDataProvider = environmentSettingsDataProvider;
+                _openFileDialogService = openFileDialogService;          
                 _messageDialogService = messageDialogService;
 
                 SetApplicationVersion();
                 TestCaseEditViewModels = new ObservableCollection<ITestCaseEditViewModel>();
                 NavigationViewModel = navigationViewModel;
                 InitializeCommands();
-                //InitializeEnvironmentSettings();
-                InitializeEnvironmentSettings2();
+             
+                InitializeEnvironmentSettings();
             }
         }
 
-        private void InitializeEnvironmentSettings2()
+        private void InitializeEnvironmentSettings()
         {
-            EnvironmentConfig = ConfigurationManager.GetSection("Environments") as EnvironmentConfig;
+            EnvironmentConfig = ConfigurationManager.GetSection("Environments") as EnvironmentSettings;
 
             EnvironmentViewModels = new ObservableCollection<IEnvironmentViewModel>();
 
@@ -168,7 +130,7 @@ namespace CPS_TestBatch_Manager.ViewModels
                 EnvironmentViewModels.Add(envVM);
             }
 
-            var settingsEnv = Properties.Settings.Default.SelectedEnvironment;//ConfigurationManager.AppSettings.Get("SelectedEnvironment");
+            var settingsEnv = Properties.Settings.Default.SelectedEnvironment;
 
             var currentEnvironmentVM = EnvironmentViewModels.SingleOrDefault(x => x.Environment.Name == Properties.Settings.Default.SelectedEnvironment);
 
@@ -182,58 +144,16 @@ namespace CPS_TestBatch_Manager.ViewModels
         private void SetApplicationVersion()
         {
             ApplicationVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
-        }
-
-        //private void InitializeEnvironmentSettings()
-        //{
-        //    EnvironmentSettings = _environmentSettingsDataProvider.XmlFileToObject();
-        //    Environments = EnvironmentSettings.Environments;
-
-        //    EnvironmentViewModels = new ObservableCollection<IEnvironmentViewModel>();
-
-        //    foreach (var env in Environments)
-        //    {
-        //        var envVM = _environmentViewModelCreator(env);
-        //        EnvironmentViewModels.Add(envVM);
-        //    }
-
-        //    var defaultEnvVM = EnvironmentViewModels.SingleOrDefault(x => x.Environment.Name == "CAT");
-
-        //    //TODO: try setting to CAT environment by default for now, eventually will come from config file...
-        //    if(defaultEnvVM != null)
-        //    {
-        //        defaultEnvVM.IsChecked = true;
-        //        SelectedEnvironmentViewModel = defaultEnvVM;
-        //    }
-        //}
+        }        
 
         private void InitializeCommands()
         {
             CloseTabCommand = new RelayCommand(p => CloseTab(p));
-            AddTestCaseCommand = new RelayCommand(p => AddTestCase(p));
-            //SelectEnvironmentCommand = new RelayCommand(p => SelectEnvironment(p));
-            LoadTestSuiteCommand = new RelayCommand(p => LoadTestCaseSuiteFile());
-            //UncheckAllEnvironmentCommand = new RelayCommand(p => UncheckEnvironments());
+            AddTestCaseCommand = new RelayCommand(p => AddTestCase(p));            
+            LoadTestSuiteCommand = new RelayCommand(p => LoadTestCaseSuiteFile());          
             ViewTestCaseSuiteFileCommand = new RelayCommand(p => ViewTestCaseSuiteFile(p));
         }
-
-        //private void OnEnvironmentSelected(EnvironmentViewModel environmentVm)
-        //{
-        //    foreach(var envVm in EnvironmentViewModels)
-        //    {
-        //        envVm.IsChecked = false;
-        //    }
-
-        //    environmentVm.IsChecked = true;
-        //    SelectedEnvironmentViewModel = environmentVm;
-
-        //    //TODO: probably need to reset all testCaseEditVM's environment, validate if this is working...
-        //    foreach(var testCaseVm in TestCaseEditViewModels)
-        //    {
-        //        testCaseVm.CurrentEnvironment = environmentVm.Environment.Model;
-        //    }            
-        //}
-
+        
         private void OnEnvironmentSelected(EnvironmentViewModel environmentVm)
         {
             foreach (var envVm in EnvironmentViewModels)
