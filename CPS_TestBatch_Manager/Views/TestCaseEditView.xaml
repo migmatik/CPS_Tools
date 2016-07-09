@@ -22,7 +22,7 @@
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
 
-        <Label Content="Test Batch Name" Margin="5"/>
+        <Label Content="Test Case Name" Margin="5"/>
         <TextBox Text="{Binding TestCase.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Margin="5"/>
 
         <Label Content="Questionnaire Id" Grid.Row="1" Margin="5"/>

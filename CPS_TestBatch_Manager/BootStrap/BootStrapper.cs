@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using CPS_TestBatch_Manager.Configuration;
 using CPS_TestBatch_Manager.DataAccess;
 using CPS_TestBatch_Manager.DataProvider;
 using CPS_TestBatch_Manager.DataProvider.Lookups;
@@ -19,23 +20,20 @@ namespace CPS_TestBatch_Manager.BootStrap
             builder.RegisterType<MainWindowViewModel>().AsSelf();
             builder.RegisterType<EventAggregator>().As<IEventAggregator>().SingleInstance();
             builder.RegisterType<MessageDialogService>().As<IMessageDialogService>();
-                        
             builder.RegisterType<EqTestCaseLookupProvider>().As<ILookupProvider<EqTestCase>>();
             builder.RegisterType<TestCaseEditViewModel>().As<ITestCaseEditViewModel>();
             builder.RegisterType<NavigationViewModel>().As<INavigationViewModel>();
             builder.RegisterType<EnvironmentViewModel>().As<IEnvironmentViewModel>();
-            builder.RegisterType<EqTestCaseDataProvider>().As<IEqTestCaseDataProvider>();            
+            builder.RegisterType<EqTestCaseDataProvider>().As<IEqTestCaseDataProvider>();
             builder.RegisterType<TestCaseFileDataService>().As<ITestCaseDataService>();
             builder.RegisterType<OpenFileDialogService>().As<IIOService>();
             builder.RegisterType<FileToPocoSerializer<EqTestSuite>>().As<IXmlSerializerService<EqTestSuite>>();
             builder.RegisterType<ResponseParameterOptionsService>().As<IXmlSerializerService<EqResponseParameters>>();
-            builder.RegisterType<EnvironmentSettingsDataProvider>().As<IXmlSerializerService<EnvironmentSettings>>();
             builder.RegisterType<CaseIdDataProvider>().As<ICaseIdDataProvider>();
             builder.RegisterType<CaseIdFileDataService>().As<ICaseIdDataService>();
+            builder.RegisterType<EnvironmentElement>().As<IEnvironment>();           
 
             return builder.Build();
-            //adding a comment
-            //adding another comment
         }
     }
 }

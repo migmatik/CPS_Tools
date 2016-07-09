@@ -46,6 +46,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -65,10 +66,11 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="BootStrap\BootStrapper.cs" />
+    <Compile Include="Configuration\EnvironmentSettings.cs" />
+    <Compile Include="Configuration\IEnvironment.cs" />
     <Compile Include="DataAccess\CaseIdFileDataService.cs" />
     <Compile Include="DataAccess\ICaseIdDataService.cs" />
     <Compile Include="DataProvider\CaseIdDataProvider.cs" />
-    <Compile Include="DataProvider\EnvironmentSettingsDataProvider.cs" />
     <Compile Include="DataProvider\EqTestCaseDataProvider.cs" />
     <Compile Include="DataProvider\FileToPocoSerializer.cs" />
     <Compile Include="DataProvider\ICaseIdDataProvider.cs" />
@@ -85,8 +87,6 @@
     <Compile Include="Events\EnvironmentSelectedEvent.cs" />
     <Compile Include="Events\TestCaseSavedEvent.cs" />
     <Compile Include="Events\TestCaseDeletedEvent.cs" />
-    <Compile Include="Models\Environment.cs" />
-    <Compile Include="Models\EnvironmentSettings.cs" />
     <Compile Include="Models\EqInitInputTemplate.cs" />
     <Compile Include="Models\EqResponseParameters.cs" />
     <Compile Include="Models\EqSimulatedInput.cs" />
