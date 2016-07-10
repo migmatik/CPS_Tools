@@ -114,17 +114,17 @@
         </Setter>
     </Style>
 
-    <Style x:Key="CloseTabButtonStyle" TargetType="Button">
+    <Style x:Key="CloseTabButtonStyle" x:Name="closeTabButton" TargetType="Button">
         <Setter Property="Width" Value="15"/>
         <Setter Property="Height" Value="15"/>
-        <Setter Property="Margin" Value="2"/>
+        <Setter Property="Margin" Value="1"/>
         <Setter Property="HorizontalAlignment" Value="Left"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
-                    <Grid Background="Transparent">
+                    <Grid x:Name="grid" Background="Transparent">
                         <Viewbox>
-                            <Path x:Name="path" Width="14" Height="14" Stroke="LightCoral" StrokeThickness="3" RenderTransformOrigin="0.5 0.5">
+                            <Path x:Name="path" Width="14" Height="14" Stroke="Black" StrokeThickness="1" RenderTransformOrigin="0.5 0.5">
                                 <Path.Data>
                                     <GeometryGroup>
                                         <LineGeometry StartPoint="0,7" EndPoint="14,7"/>
@@ -139,10 +139,12 @@
                     </Grid>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="path" Property="Stroke" Value="#CCCCCC"/>
+                            <!--<Setter TargetName="grid"  Property="Background" Value="Red"/>-->
+                            <Setter TargetName="path" Property="Stroke" Value="Red"/>
                         </Trigger>
                         <Trigger Property="IsPressed" Value="True">
                             <Setter TargetName="path" Property="Stroke" Value="White"/>
+                            <Setter TargetName="grid"  Property="Background" Value="LightCoral"/>
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="False">
                             <Setter TargetName="path" Property="Stroke" Value="Gray"/>

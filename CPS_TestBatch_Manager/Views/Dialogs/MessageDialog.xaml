@@ -8,20 +8,24 @@
         Background="#DDDDDD"
         FontSize="{StaticResource DefaultFontSize}"
         WindowStartupLocation="CenterOwner"
-        WindowStyle="ToolWindow"
+        WindowStyle="SingleBorderWindow"
         ShowInTaskbar="False"
         ResizeMode="NoResize" MinWidth="300" SizeToContent="WidthAndHeight" d:DesignHeight="138.5">
     <Border BorderBrush="White" BorderThickness="2">
         <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="281*"/>
+                <ColumnDefinition Width="9*"/>
+            </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            <TextBlock x:Name="textBlock" Text="The Message Text" TextWrapping="Wrap" Margin="5"/>
+            <TextBlock x:Name="textBlock" Text="The Message Text" TextWrapping="Wrap" Margin="5" Grid.ColumnSpan="2"/>
             <StackPanel x:Name="ButtonsPanel"
                   Orientation="Horizontal"
-                  Grid.Row="2"
-                  HorizontalAlignment="Center">
+                  Grid.Row="1"
+                  HorizontalAlignment="Center" Margin="145,0,136,0">
                 <StackPanel.Resources>
                     <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
                         <Setter Property="Margin" Value="5"/>
